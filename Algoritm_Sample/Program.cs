@@ -2,7 +2,7 @@
 
 class BinarySearchExample
 {
-    // Метод бинарного поиска
+    // Метод бинарного поиска - итеративная версия
     public static int BinarySearch(int[] array, int target)
     {
         int left = 0;
