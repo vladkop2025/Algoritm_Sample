@@ -1,42 +1,103 @@
 ﻿using System;
 
-class BinarySearchExample
+class QuickSortExample
 {
-    // Метод бинарного поиска - итеративная версия Сложность O(log n)
-    //Итеративный vs рекурсивный – итеративный вариант обычно предпочтительнее из-за отсутствия накладных расходов на вызовы функций.
-    public static int BinarySearch(int[] array, int target)
+    // Основной метод для вызова сортировки - Быстрая сортировка (рекурсивная реализация)
+    public static void QuickSort(int[] array)
     {
-        int left = 0;
-        int right = array.Length - 1;
+        QuickSort(array, 0, array.Length - 1);
+    }
 
-        while (left <= right)
+    // Рекурсивный метод быстрой сортировки
+    private static void QuickSort(int[] array, int left, int right)
+    {
+        if (left < right)
         {
-            int mid = left + (right - left) / 2; // Предотвращает переполнение
+            // Получаем индекс опорного элемента после разделения
+            int pivotIndex = Partition(array, left, right);
 
-            if (array[mid] == target)
-                return mid; // Элемент найден
-            else if (array[mid] < target)
-                left = mid + 1; // Ищем в правой половине
-            else
-                right = mid - 1; // Ищем в левой половине
+            // Рекурсивно сортируем элементы до и после опорного
+            QuickSort(array, left, pivotIndex - 1);
+            QuickSort(array, pivotIndex + 1, right);
+        }
+    }
+
+    // Метод для разделения массива
+    private static int Partition(int[] array, int left, int right)
+    {
+        int pivot = array[right]; // Опорный элемент (можно выбирать по-разному)
+        int i = left - 1; // Индекс меньшего элемента
+
+        for (int j = left; j < right; j++)
+        {
+            // Если текущий элемент меньше или равен опорному
+            if (array[j] <= pivot)
+            {
+                i++;
+                // Меняем элементы местами
+                Swap(ref array[i], ref array[j]);
+            }
         }
 
-        return -1; // Элемент не найден
+        // Помещаем опорный элемент на правильную позицию
+        Swap(ref array[i + 1], ref array[right]);
+        return i + 1;
+    }
+
+    // Вспомогательный метод для обмена элементов
+    private static void Swap(ref int a, ref int b)
+    {
+        int temp = a;
+        a = b;
+        b = temp;
     }
 
     static void Main()
     {
-        int[] sortedArray = { 1, 3, 5, 7, 9, 11, 13, 15 };
-        int target = 13;
+        int[] array = { 10, 7, 8, 9, 1, 5, 3, 6, 4, 2 };
 
-        int result = BinarySearch(sortedArray, target);
+        Console.WriteLine("Несортированный массив:");
+        Console.WriteLine(string.Join(", ", array));
 
-        if (result != -1)
-            Console.WriteLine($"Элемент {target} найден на позиции {result}.");
-        else
-            Console.WriteLine($"Элемент {target} не найден в массиве.");
+        QuickSort(array);
+
+        Console.WriteLine("\nОтсортированный массив:");
+        Console.WriteLine(string.Join(", ", array));
     }
 }
 
-//Прежде чем приступить к бинарному поиску, нам нужно отсортировать данные. Не самые лучшие алгоритмы сортировки имеют сложность  O(n^{2}).
-//То есть для одной операции поиска, сложность будет O(log_2(x)+n^{2}) или просто O(n^{2}).
+//Ключевые моменты:
+
+    //Принцип работы:
+
+//Алгоритм выбирает опорный элемент (pivot) и разделяет массив на две части: элементы меньше опорного и элементы больше опорного.
+
+//Затем рекурсивно сортирует обе части.
+
+    //Выбор опорного элемента:
+
+//В данном примере pivot выбирается как последний элемент (array[right]), но можно использовать:
+
+//Первый элемент(array[left])
+
+//Средний элемент(array[(left + right) / 2])
+
+//Случайный элемент(для защиты от худшего случая)
+
+    //Сложность:
+
+//Средний случай: O(n log n) — оптимальная производительность.
+
+//Худший случай: O(n²) — если массив уже отсортирован, а pivot выбран неудачно (например, всегда минимальный или максимальный элемент).
+
+    //Оптимизации:
+
+//Для небольших подмассивов (например, меньше 10 элементов) можно переключаться на сортировку вставками.
+
+//Рандомизированный выбор pivot для избежания худшего случая.
+
+    //Преимущества:
+
+//Один из самых быстрых алгоритмов сортировки на практике.
+
+//Работает "на месте" (не требует дополнительной памяти, кроме стековых вызовов).
