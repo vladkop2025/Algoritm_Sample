@@ -1,42 +1,47 @@
 ﻿using System;
 
-class BinarySearchExample
+class OptimizedBubbleSortExample
 {
-    // Метод бинарного поиска - итеративная версия Сложность O(log n)
-    //Итеративный vs рекурсивный – итеративный вариант обычно предпочтительнее из-за отсутствия накладных расходов на вызовы функций.
-    public static int BinarySearch(int[] array, int target)
+    // Метод пузырьковой сортировки
+    //Добавление флага swapped позволяет завершить сортировку досрочно, если на очередной итерации не было ни одного обмена (значит, массив уже упорядочен).
+
+    public static void BubbleSort(int[] array)
     {
-        int left = 0;
-        int right = array.Length - 1;
+        int n = array.Length;
+        bool swapped;
 
-        while (left <= right)
+        for (int i = 0; i < n - 1; i++)
         {
-            int mid = left + (right - left) / 2; // Предотвращает переполнение
+            swapped = false;
 
-            if (array[mid] == target)
-                return mid; // Элемент найден
-            else if (array[mid] < target)
-                left = mid + 1; // Ищем в правой половине
-            else
-                right = mid - 1; // Ищем в левой половине
+            for (int j = 0; j < n - i - 1; j++)
+            {
+                if (array[j] > array[j + 1])
+                {
+                    // Меняем элементы местами
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                    swapped = true;
+                }
+            }
+
+            // Если на этой итерации не было обменов, массив уже отсортирован
+            if (!swapped)
+                break;
         }
-
-        return -1; // Элемент не найден
     }
 
     static void Main()
     {
-        int[] sortedArray = { 1, 3, 5, 7, 9, 11, 13, 15 };
-        int target = 13;
+        int[] array = { 64, 34, 25, 12, 22, 11, 90 };
 
-        int result = BinarySearch(sortedArray, target);
+        Console.WriteLine("Несортированный массив:");
+        Console.WriteLine(string.Join(", ", array));
 
-        if (result != -1)
-            Console.WriteLine($"Элемент {target} найден на позиции {result}.");
-        else
-            Console.WriteLine($"Элемент {target} не найден в массиве.");
+        BubbleSort(array);
+
+        Console.WriteLine("\nОтсортированный массив:");
+        Console.WriteLine(string.Join(", ", array));
     }
 }
-
-//Прежде чем приступить к бинарному поиску, нам нужно отсортировать данные. Не самые лучшие алгоритмы сортировки имеют сложность  O(n^{2}).
-//То есть для одной операции поиска, сложность будет O(log_2(x)+n^{2}) или просто O(n^{2}).
