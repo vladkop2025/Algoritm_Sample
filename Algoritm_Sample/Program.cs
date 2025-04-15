@@ -3,6 +3,7 @@
 class BinarySearchRecursiveExample
 {
     // Рекурсивный метод бинарного поиска  - Сложность O(log n) 
+    //Итеративный vs рекурсивный – итеративный вариант обычно предпочтительнее из-за отсутствия накладных расходов на вызовы функций.
     public static int BinarySearch(int[] array, int target, int left, int right)
     {
         if (left > right)
