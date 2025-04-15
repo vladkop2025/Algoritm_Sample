@@ -1,26 +1,21 @@
 ﻿using System;
 
-class BinarySearchExample
+class BinarySearchRecursiveExample
 {
-    // Метод бинарного поиска - итеративная версия
-    public static int BinarySearch(int[] array, int target)
+    // Рекурсивный метод бинарного поиска  - Сложность O(log n) 
+    public static int BinarySearch(int[] array, int target, int left, int right)
     {
-        int left = 0;
-        int right = array.Length - 1;
+        if (left > right)
+            return -1; // Базовый случай: элемент не найден
 
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2; // Предотвращает переполнение
+        int mid = left + (right - left) / 2;
 
-            if (array[mid] == target)
-                return mid; // Элемент найден
-            else if (array[mid] < target)
-                left = mid + 1; // Ищем в правой половине
-            else
-                right = mid - 1; // Ищем в левой половине
-        }
-
-        return -1; // Элемент не найден
+        if (array[mid] == target)
+            return mid; // Элемент найден
+        else if (array[mid] < target)
+            return BinarySearch(array, target, mid + 1, right); // Ищем справа
+        else
+            return BinarySearch(array, target, left, mid - 1); // Ищем слева
     }
 
     static void Main()
@@ -28,7 +23,7 @@ class BinarySearchExample
         int[] sortedArray = { 1, 3, 5, 7, 9, 11, 13, 15 };
         int target = 13;
 
-        int result = BinarySearch(sortedArray, target);
+        int result = BinarySearch(sortedArray, target, 0, sortedArray.Length - 1);
 
         if (result != -1)
             Console.WriteLine($"Элемент {target} найден на позиции {result}.");
