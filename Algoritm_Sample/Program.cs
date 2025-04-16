@@ -1,42 +1,49 @@
-﻿using System;
+﻿//Для начала следует установить библиотеку BenchmarkDotNet, используя NuGet-пакет: 
+using BenchmarkDotNet.Running;
+using System.Text;
+using System;
 
-class BinarySearchExample
+class Program
 {
-    // Метод бинарного поиска - итеративная версия Сложность O(log n)
-    //Итеративный vs рекурсивный – итеративный вариант обычно предпочтительнее из-за отсутствия накладных расходов на вызовы функций.
-    public static int BinarySearch(int[] array, int target)
+    static void Main(string[] args)
     {
-        int left = 0;
-        int right = array.Length - 1;
+        UseString(70000);
+        Console.WriteLine("Ready to switch");
+        Console.ReadKey();
 
-        while (left <= right)
-        {
-            int mid = left + (right - left) / 2; // Предотвращает переполнение
-
-            if (array[mid] == target)
-                return mid; // Элемент найден
-            else if (array[mid] < target)
-                left = mid + 1; // Ищем в правой половине
-            else
-                right = mid - 1; // Ищем в левой половине
-        }
-
-        return -1; // Элемент не найден
+        UseStringBuilder(70000);
+        Console.ReadKey();
     }
 
-    static void Main()
+    static string UseString(int n)
     {
-        int[] sortedArray = { 1, 3, 5, 7, 9, 11, 13, 15 };
-        int target = 13;
+        string value = "";
 
-        int result = BinarySearch(sortedArray, target);
+        for (int i = 0; i < n; i++)
+        {
+            value += i.ToString();
+            value += " ";
+        }
 
-        if (result != -1)
-            Console.WriteLine($"Элемент {target} найден на позиции {result}.");
-        else
-            Console.WriteLine($"Элемент {target} не найден в массиве.");
+        return value;
+    }
+
+    static string UseStringBuilder(int n)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < n; i++)
+        {
+            builder.Append(i.ToString());
+            builder.Append(" ");
+        }
+
+        return builder.ToString();
     }
 }
 
-//Прежде чем приступить к бинарному поиску, нам нужно отсортировать данные. Не самые лучшие алгоритмы сортировки имеют сложность  O(n^{2}).
-//То есть для одной операции поиска, сложность будет O(log_2(x)+n^{2}) или просто O(n^{2}).
+//При использовании string создаётся множество строк (из-за того, что класс String представляет иммутабельный объект) и
+//расходуется больше памяти, но мы не так сильно замечаем это, потому что очень часто запускается GC, что можно видеть
+//на графике, наведя курсор на одну из красных отметок:
+
+//А при работе StringBuilder такого не происходит, поскольку строка не создается до вызова метода ToString.
